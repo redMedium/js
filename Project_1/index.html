@@ -21,56 +21,6 @@
     </ul>
 </div>
 
-<div id="addColumnView">
-    <ul id="columnsAdded">
-
-    </ul>
-    <button id="addColumnButton">Add column</button>
-</div>
-<div id="addTimespanView">
-    <form action="">
-        <label>From...</label>
-        <label for="fromYear"></label>
-        <select>
-            <option>Select year</option>
-        </select>
-        <select for="fromMonth">
-            <option>Select month</option>
-        </select>
-        <select for="fromDay">
-            <option>Select day</option>
-        </select>
-
-        <label>To...</label>
-        <label for="toYear"></label>
-        <select>
-            <option>Select year</option>
-        </select>
-        <select for="toMonth">
-            <option>Select month</option>
-        </select>
-        <select for="toDay">
-            <option>Select day</option>
-        </select>
-    </form>
-</div>
-
-<div id="openView">
-
-</div>
-
-<div id="saveView">
-
-</div>
-
-<div id="saveAsView">
-
-</div>
-
-<div id="preferences">
-
-</div>
-
 <div id="calendar">
     <table>
         <tr>
@@ -115,6 +65,69 @@
         </tr>
     </table>
 </div>
+
+<div id="addColumnView">
+    <h3>Add new columns</h3>
+    <label for="addColumnInput">Column header: </label>
+    <input id="addColumnInput">
+    <button id="addColumnButton" onclick="addColumn">Add</button>
+    <br>
+    <label for="columnsAdded">Columns added: </label>
+    <ul id="columnsAdded">
+
+    </ul>
+    <button id="addTimespanButton">Add timespan</button>
+</div>
+
+<div id="addTimespanView">
+    <form action="">
+        <label>Add timespan</label>
+        <br>
+        <label>From...</label>
+        <label></label>
+        <select>
+            <option>Select year</option>
+        </select>
+        <select>
+            <option>Select month</option>
+        </select>
+        <select>
+            <option>Select day</option>
+        </select>
+        <br>
+        <label>To...</label>
+        <label></label>
+        <select>
+            <option>Select year</option>
+        </select>
+        <select>
+            <option>Select month</option>
+        </select>
+        <select>
+            <option>Select day</option>
+        </select>
+        <br>
+        <button id="addColumnViewButton">Add columns</button>
+    </form>
+</div>
+
+<div id="openView">
+
+</div>
+
+<div id="saveView">
+
+</div>
+
+<div id="saveAsView">
+
+</div>
+
+<div id="preferences">
+
+</div>
+
+
 
 </body>
 </html>
