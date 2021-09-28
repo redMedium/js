@@ -66,49 +66,43 @@
     </table>
 </div>
 
-<div id="addColumnView">
+<div id="createCalendarView">
     <h3>Add new columns</h3>
     <label for="addColumnInput">Column header: </label>
     <input id="addColumnInput">
     <button id="addColumnButton" onclick="addColumn">Add</button>
     <br>
-    <label for="columnsAdded">Columns added: </label>
-    <ul id="columnsAdded">
+    <label for="columnsInfo">Columns added: </label>
+    <ul id="columnsInfo">
 
     </ul>
-    <button id="addTimespanButton">Add timespan</button>
-</div>
-
-<div id="addTimespanView">
+    <br>
     <form action="">
-        <label>Add timespan</label>
-        <br>
+        <h3>Define timespan</h3>
         <label>From...</label>
-        <label></label>
-        <select>
+        <select id="fromSelectYear">
             <option>Select year</option>
         </select>
-        <select>
+        <select id="fromSelectMonth">
             <option>Select month</option>
         </select>
-        <select>
-            <option>Select day</option>
+        <select id="fromSelectDay">
+            <option></option>
         </select>
         <br>
         <label>To...</label>
-        <label></label>
-        <select>
+        <select id="toSelectYear">
             <option>Select year</option>
         </select>
-        <select>
+        <select id="toSelectMonth">
             <option>Select month</option>
         </select>
-        <select>
-            <option>Select day</option>
+        <select id="toSelectDay">
+            <option></option>
         </select>
-        <br>
-        <button id="addColumnViewButton">Add columns</button>
     </form>
+    <br>
+    <button id="createCalendar">Create calendar</button>
 </div>
 
 <div id="openView">
@@ -131,5 +125,3 @@
 
 </body>
 </html>
-
-<!-- test -->
