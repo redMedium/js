@@ -21,49 +21,8 @@
     </ul>
 </div>
 
-<div id="calendar">
-    <table>
-        <tr>
-            <th>Date</th>
-            <th>Math</th>
-            <th>Physics</th>
-        </tr>
-        <tr>
-            <td>1.2.2002</td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>2.2.2002</td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>3.2.2002</td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>4.2.2002</td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>5.2.2002</td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>6.2.2002</td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>7.2.2002</td>
-            <td></td>
-            <td></td>
-        </tr>
-    </table>
+<div id="calendarDiv">
+    
 </div>
 
 <div id="createCalendarView">
@@ -71,13 +30,14 @@
     <label for="addColumnInput">Column header: </label>
     <input id="addColumnInput">
     <button id="addColumnButton" onclick="addColumn">Add</button>
+    <button id="removeColumnsButton">Remove all</button>
     <br>
     <label for="columnsInfo">Columns added: </label>
     <ul id="columnsInfo">
 
     </ul>
     <br>
-    <form action="">
+    <form>
         <h3>Define timespan</h3>
         <label>From...</label>
         <select id="fromSelectYear">
@@ -102,7 +62,7 @@
         </select>
     </form>
     <br>
-    <button id="createCalendar">Create calendar</button>
+    <button id="createCalendarButton">Create calendar</button>
 </div>
 
 <div id="openView">
@@ -110,7 +70,7 @@
 </div>
 
 <div id="saveView">
-
+    
 </div>
 
 <div id="saveAsView">
