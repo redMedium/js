@@ -151,7 +151,11 @@ function createDateOptions(selectYear, selectMonth, selectDay) {
     }
 }
 
+<<<<<<< HEAD
 var rowN = 0; // Global row number indicator used in createTextCells() and collectCalendarData()
+=======
+var rowN = 0; // Global row number indicator used in createTextCells()
+>>>>>>> 2c1d6eefd3a9cfb00b940268b71108f4d6e05c7b
 var createCalendarButton = document.getElementById("createCalendarButton");
 createCalendarButton.onclick = function() {
     calendarDiv.innerHTML = ""; // Empty calendar if previous entries have been made
@@ -273,6 +277,7 @@ createCalendarButton.onclick = function() {
     }
 }
 
+<<<<<<< HEAD
 
 function saveCalendar(filename) {
     var calendarData;
@@ -311,4 +316,15 @@ function saveCalendar(filename) {
         link.href = window.URL.createObjectURL(new Blob([data], {type: "text/plain"}));
         link.click();
     }
+=======
+function collectCalendarData() {
+    var dataArray = [];
+
+    var tableRows = calendarDiv.firstChild.childNodes;
+    var headers = tableRows[0];
+
+    headers.forEach(header => {
+        dataArray.push(header.innerHTML);
+    });
+>>>>>>> 2c1d6eefd3a9cfb00b940268b71108f4d6e05c7b
 }
