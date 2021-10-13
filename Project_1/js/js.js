@@ -19,12 +19,12 @@ openButton.onclick = function() {
 
 var saveButton = document.getElementById("saveButton");
 saveButton.onclick = function() {
-    showThisHideOthers();
+    
 }
 
 var saveAsButton = document.getElementById("saveAsButton");
 saveAsButton.onclick = function() {
-    showThisHideOthers();
+    saveCalendar("MyCalendar");
 }
 
 var preferencesButton = document.getElementById("preferencesButton");
@@ -151,9 +151,10 @@ function createDateOptions(selectYear, selectMonth, selectDay) {
     }
 }
 
+var rowN = 0; // Global row number indicator used in createTextCells() and collectCalendarData()
 var createCalendarButton = document.getElementById("createCalendarButton");
-createCalendarButton.onclick = function() {    
-    var cellNo = 0;
+createCalendarButton.onclick = function() {
+    calendarDiv.innerHTML = ""; // Empty calendar if previous entries have been made
 
     if (fromDate > toDate) {
         window.alert("Calendar starting date must be prior to its ending date");
@@ -209,8 +210,9 @@ createCalendarButton.onclick = function() {
         incrementDate.setDate(incrementDate.getDate() + 1)) {
             createDateCell();
             createTextCells();
-            assignButtons();
         }
+
+        rowN = 0; // set default value for reuse
 
         function createDateCell() {
             var formattedDate = 
@@ -226,57 +228,87 @@ createCalendarButton.onclick = function() {
         }
 
         function createTextCells() {
-            var tdText, textarea, pre, button, calendarButtons;
+            var tdText, textarea, pre, button;
 
             for (i = 0; i < columnValues.length; i++) {
                 tdText = document.createElement("td");
 
                 textarea = document.createElement("textarea");
-                textarea.setAttribute("id", "tx_" + cellNo);
+                textarea.setAttribute("id", "tx_" + i + rowN);
                 hideElement(textarea);
 
                 pre = document.createElement("pre");
-                pre.setAttribute("id", "pr_" + cellNo);
+                pre.setAttribute("id", "pr_" + i + rowN);
 
                 button = document.createElement("button");
-                button.setAttribute("id", "bt_" + cellNo);
-                button.setAttribute("class", "calendarButton");
+                button.setAttribute("id", "bt_" + i + rowN);
                 button.innerHTML = "Edit";
+                ((pseudoI, pseudoRowN) => {
+                    button.addEventListener("click", function() {
+                        textarea = document.getElementById("tx_" + pseudoI + pseudoRowN);
+                        pre = document.getElementById("pr_" + pseudoI + pseudoRowN);
+                        button = document.getElementById("bt_" + pseudoI + pseudoRowN);
+
+                        if (button.innerHTML != "Save changes") {
+                            textarea.value = pre.innerHTML;
+                            button.innerHTML = "Save changes";
+                            hideElement(pre);
+                            showElement(textarea);
+                        } else {
+                            pre.innerHTML = textarea.value;
+                            textarea.value = "";
+                            button.innerHTML = "Edit";
+                            hideElement(textarea);
+                            showElement(pre);
+                        }
+                    });
+                })(i, rowN);
 
                 trCells.appendChild(tdText);
                 tdText.append(textarea, pre, button);
 
-                cellNo++;
             }
+            rowN++;
+        }
+    }
+}
+
+
+function saveCalendar(filename) {
+    var calendarData;
+    (() => {calendarData = collectCalendarData();})();
+    writeToFile(filename, calendarData);
+
+    function collectCalendarData() {
+        var dataArray = [];
+        var colN;
+        var tableRows = calendarDiv.firstChild.children; // div/table/*
+        var headerCells = tableRows[0]; // 1st tr/*
+        var rowsInTable = calendarDiv.firstChild.childElementCount;
+        var cellsInRow = tableRows[0].childElementCount;
+        var cell;
+
+        for (colN = 1; colN < cellsInRow; colN++) { // header tr's structure differs from that of data cells, first cell is empty
+            dataArray.push(headerCells.children[colN].innerHTML); // collect column headers
         }
 
-        function assignButtons() {
-            calendarButtons = document.getElementsByClassName("calendarButton");
-
-            for (i = 0; i < calendarButtons.length; i++) {
-                let button = calendarButtons[i];
-
-                ((copyI) => {
-                    button.addEventListener("click", function() {
-                        textById = document.getElementById("tx_" + copyI);
-                        preById = document.getElementById("pr_" + copyI);
-                        buttonById = document.getElementById("bt_" + copyI)
-
-                        if (buttonById.innerHTML != "Save changes") {
-                            textById.value = preById.innerHTML;
-                            buttonById.innerHTML = "Save changes";
-                            hideElement(preById);
-                            showElement(textById);
-                        } else {
-                            preById.innerHTML = textById.value;
-                            textById.value = "";
-                            buttonById.innerHTML = "Edit";
-                            hideElement(textById);
-                            showElement(preById);
-                        }
-                    });
-                })(i);
+        for (rowN = 1; rowN < rowsInTable; rowN++) {
+            for (colN = 0; colN < cellsInRow; colN++) {
+                cell = tableRows[rowN].children[colN];
+                if (colN < 1) {
+                    dataArray.push(cell.innerHTML); // collect dates
+                } else {
+                    dataArray.push(cell.getElementsByTagName("pre")[0].innerHTML); // collect calendar notes
+                }
             }
         }
+        return dataArray.join(" ~~ ");
+    }
+
+    function writeToFile(filename, data) {
+        var link = document.createElement("a");
+        link.download = filename + ".calendar";
+        link.href = window.URL.createObjectURL(new Blob([data], {type: "text/plain"}));
+        link.click();
     }
 }
