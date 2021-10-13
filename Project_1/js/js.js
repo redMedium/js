@@ -14,7 +14,7 @@ newButton.onclick = function() {
 
 var openButton = document.getElementById("openButton");
 openButton.onclick = function() {
-    showThisHideOthers();
+    loadCalendar();
 }
 
 var saveButton = document.getElementById("saveButton");
@@ -302,7 +302,7 @@ function saveCalendar(filename) {
                 }
             }
         }
-        return dataArray.join(" ~~ ");
+        return dataArray.join(" ~~ "); // comma can be used in calendar notes
     }
 
     function writeToFile(filename, data) {
@@ -312,3 +312,22 @@ function saveCalendar(filename) {
         link.click();
     }
 }
+
+function loadCalendar() {
+    var link = document.createElement("input");
+    link.setAttribute("type", "file");
+    link.setAttribute("accept", ".calendar/*,.txt/*,.md/*");
+    link.setAttribute("onclick", "readFile(this)");
+    link.click();
+
+    
+}
+
+function readFile(input) {
+    const blob = new Blob();
+    var fileReader = new FileReader();
+    fileReader.readAsText(blob);
+    fileReader.onload = function() {
+    console.log(blob);
+   }
+}   
