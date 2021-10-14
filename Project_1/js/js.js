@@ -19,17 +19,7 @@ openButton.onclick = function() {
 
 var saveButton = document.getElementById("saveButton");
 saveButton.onclick = function() {
-    
-}
-
-var saveAsButton = document.getElementById("saveAsButton");
-saveAsButton.onclick = function() {
-    saveCalendar("MyCalendar");
-}
-
-var preferencesButton = document.getElementById("preferencesButton");
-preferencesButton.onclick = function() {
-    showThisHideOthers();
+    saveCalendar();
 }
 
 var columnsInfo = document.getElementById("columnsInfo");
@@ -273,61 +263,99 @@ createCalendarButton.onclick = function() {
     }
 }
 
+function saveCalendar() {
+    var colN;
+    var tableRows = calendarDiv.firstChild.children; // div/table/*
+    var headerCells = tableRows[0]; // 1st tr/*
+    var rowsInTable = calendarDiv.firstChild.childElementCount;
+    var cellsInRow = tableRows[0].childElementCount;
+    var cell;
+    var dateCell;
+    var headerRow = "";
+    var dataRow = "";
+    var storage = window.localStorage;
+    storage.clear;
 
-function saveCalendar(filename) {
-    var calendarData;
-    (() => {calendarData = collectCalendarData();})();
-    writeToFile(filename, calendarData);
+    for (colN = 1; colN < cellsInRow; colN++) { // header tr's structure differs from that of data cells, first cell is empty
+        headerRow += " ~ " + headerCells.children[colN].innerHTML; // use tilde as separator
+    }
+    storage.setItem("Headers", headerRow);
 
-    function collectCalendarData() {
-        var dataArray = [];
-        var colN;
-        var tableRows = calendarDiv.firstChild.children; // div/table/*
-        var headerCells = tableRows[0]; // 1st tr/*
-        var rowsInTable = calendarDiv.firstChild.childElementCount;
-        var cellsInRow = tableRows[0].childElementCount;
-        var cell;
-
-        for (colN = 1; colN < cellsInRow; colN++) { // header tr's structure differs from that of data cells, first cell is empty
-            dataArray.push(headerCells.children[colN].innerHTML); // collect column headers
-        }
-
-        for (rowN = 1; rowN < rowsInTable; rowN++) {
-            for (colN = 0; colN < cellsInRow; colN++) {
-                cell = tableRows[rowN].children[colN];
-                if (colN < 1) {
-                    dataArray.push(cell.innerHTML); // collect dates
-                } else {
-                    dataArray.push(cell.getElementsByTagName("pre")[0].innerHTML); // collect calendar notes
-                }
+    for (rowN = 1; rowN < rowsInTable; rowN++) {
+        for (colN = 0; colN < cellsInRow; colN++) {
+            cell = tableRows[rowN].children[colN];
+            dateCell = tableRows[rowN].children[0];
+            if (colN > 0) {  // skip date cells
+                dataRow += " ~ " + cell.getElementsByTagName("pre")[0].innerHTML; // collect calendar notes
             }
+            storage.setItem(dateCell.innerHTML, dataRow); // date used as key
         }
-        return dataArray.join(" ~~ "); // comma can be used in calendar notes
-    }
-
-    function writeToFile(filename, data) {
-        var link = document.createElement("a");
-        link.download = filename + ".calendar";
-        link.href = window.URL.createObjectURL(new Blob([data], {type: "text/plain"}));
-        link.click();
+        dataRow = "";
     }
 }
 
-function loadCalendar() {
-    var link = document.createElement("input");
-    link.setAttribute("type", "file");
-    link.setAttribute("accept", ".calendar/*,.txt/*,.md/*");
-    link.setAttribute("onclick", "readFile(this)");
-    link.click();
 
-    
-}
 
-function readFile(input) {
-    const blob = new Blob();
-    var fileReader = new FileReader();
-    fileReader.readAsText(blob);
-    fileReader.onload = function() {
-    console.log(blob);
-   }
-}   
+// function saveCalendarAsFile(filename) {
+//     var calendarData;
+//     (() => {calendarData = collectCalendarData();})();
+//     writeToFile(filename, calendarData);
+
+//     function collectCalendarData() {
+//         var dataArray = [];
+//         var colN;
+//         var tableRows = calendarDiv.firstChild.children; // div/table/*
+//         var headerCells = tableRows[0]; // 1st tr/*
+//         var rowsInTable = calendarDiv.firstChild.childElementCount;
+//         var cellsInRow = tableRows[0].childElementCount;
+//         var cell;
+
+//         for (colN = 1; colN < cellsInRow; colN++) { // header tr's structure differs from that of data cells, first cell is empty
+//             dataArray.push(headerCells.children[colN].innerHTML); // collect column headers
+//         }
+
+//         for (rowN = 1; rowN < rowsInTable; rowN++) {
+//             for (colN = 0; colN < cellsInRow; colN++) {
+//                 cell = tableRows[rowN].children[colN];
+//                 if (colN < 1) {
+//                     dataArray.push(cell.innerHTML); // collect dates
+//                 } else {
+//                     dataArray.push(cell.getElementsByTagName("pre")[0].innerHTML); // collect calendar notes
+//                 }
+//             }
+//         }
+//         return dataArray.join(" ~~ "); // custom separator, comma is an available character in calendar notes
+//     }
+
+//     function writeToFile(filename, data) {
+//         var link = document.createElement("a");
+//         link.download = filename + ".calendar";
+//         link.href = window.URL.createObjectURL(new Blob([data], {type: "text/plain"}));
+//         link.click();
+//     }
+// }
+
+// function loadCalendar() {    HUOM KESKEN!
+//     var fileInput;
+//     var inputFile;
+//     var fileReader;
+//     var inputData;
+//     var dataArray;
+
+//     fileInput = document.createElement("input");
+//     fileInput.setAttribute("type", "file");
+//     // fileInput.setAttribute("accept", ".calendar/*,.txt/*,.md/*");
+//     fileInput.onclick = function() {
+//         inputFile = fileInput.files[0];
+// console.log(typeof(inputFile));
+//         fileReader = new FileReader();
+
+//         fileReader.readAsText(inputFile);
+//         fileReader.onload = function() {
+//             inputData = fileReader.result;
+//             console.log(inputData);
+//         }
+//     }
+//     fileInput.click();
+// }
+
