@@ -16,6 +16,7 @@
         <li><button id="newButton">New</button></li>
         <li><button id="openButton">Open</button></li>
         <li><button id="saveButton">Save</button></li>
+        <li><button id="clearButton">Clear</button></li>
     </ul>
 </div>
 
@@ -24,62 +25,52 @@
 </div>
 
 <div id="createCalendarView">
+    <button id="backToCalendarButton">< Back</button>
     <h3>Add new columns</h3>
     <label for="addColumnInput">Column header: </label>
+    <br>
     <input id="addColumnInput">
     <button id="addColumnButton" onclick="addColumn">Add</button>
-    <button id="removeColumnsButton">Remove all</button>
     <br>
     <label for="columnsInfo">Columns added: </label>
     <ul id="columnsInfo">
 
     </ul>
+    <button id="removeColumnsButton">Remove all</button>
     <br>
     <form>
         <h3>Define timespan</h3>
         <label>From...</label>
+        <br>
         <select id="fromSelectYear">
             <option>Select year</option>
         </select>
+        <br>
         <select id="fromSelectMonth">
             <option>Select month</option>
         </select>
+        <br>
         <select id="fromSelectDay">
             <option></option>
         </select>
         <br>
         <label>To...</label>
+        <br>
         <select id="toSelectYear">
             <option>Select year</option>
         </select>
+        <br>
         <select id="toSelectMonth">
             <option>Select month</option>
         </select>
+        <br>
         <select id="toSelectDay">
             <option></option>
         </select>
+        <br>
     </form>
     <br>
-    <button id="createCalendarButton">Create calendar</button>
+    <button id="createCalendarButton">Create calendar ></button>
 </div>
-
-<div id="openView">
-
-</div>
-
-<div id="saveView">
-    
-</div>
-
-<div id="saveAsView">
-
-</div>
-
-<div id="preferences">
-
-</div>
-
-
-
 </body>
 </html>

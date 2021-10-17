@@ -1,51 +1,63 @@
 var navigation = document.getElementById("navigation");
-var calendarDiv = document.getElementById("calendarDiv");
+var calendarDiv = document.getElementById("calendarDiv"); // the space where the calendar is located
+var createCalendarView = document.getElementById("createCalendarView"); // under "New" button, the menu for creating a new calendar
+var columnsInfo = document.getElementById("columnsInfo"); // in createCalendar view, list of added column names
+var columnValues = []; // array of column names
 
 hideAllDivs();
 showElement(navigation);
 showElement(calendarDiv);
+assignMenuButtons();
+assignNewCalendarViewButtons();
 
-var createCalendarView = document.getElementById("createCalendarView");
-
-var newButton = document.getElementById("newButton");
-newButton.onclick = function() {
-    showThisHideOthers(createCalendarView);
-}
-
-var openButton = document.getElementById("openButton");
-openButton.onclick = function() {
-    loadCalendar();
-}
-
-var saveButton = document.getElementById("saveButton");
-saveButton.onclick = function() {
-    saveCalendar();
-}
-
-var columnsInfo = document.getElementById("columnsInfo");
-var columnValues = [];
-
-var addColumnButton = document.getElementById("addColumnButton");
-addColumnButton.onclick = function() {
-    let addColumnInput = document.getElementById("addColumnInput");
-    if (addColumnInput.value == "" || addColumnInput.value == " ") {
-        addColumnInput.value = "";
-        addColumnInput.placeholder = "Name your column!";
-        return;
+function assignMenuButtons() {
+    var newButton = document.getElementById("newButton");
+    newButton.onclick = function() {
+        showThisHideOthers(createCalendarView);
     }
-    columnsInfo.innerHTML += "<li>" + addColumnInput.value + "</li><br>";
-    columnValues.push(addColumnInput.value);
-    addColumnInput.value = "";
+    var openButton = document.getElementById("openButton");
+    openButton.onclick = function() {
+        loadCalendar();
+    }
+    var saveButton = document.getElementById("saveButton");
+    saveButton.onclick = function() {
+        saveCalendar();
+    }
+    var clearButton = document.getElementById("clearButton");
+    clearButton.onclick = function() {
+        calendarDiv.innerHTML = "";
+    }
 }
 
-var removeColumnsButton = document.getElementById("removeColumnsButton");
-removeColumnsButton.onclick = function() {
-    columnsInfo.innerHTML = "";
+function assignNewCalendarViewButtons() {
+    var backToCalendarButton = document.getElementById("backToCalendarButton");
+    backToCalendarButton.onclick = function() { 
+        hideAllDivs();
+        showElement(navigation);
+        showElement(calendarDiv);
+    }
+
+    var addColumnButton = document.getElementById("addColumnButton");
+    addColumnButton.onclick = function() {
+        let addColumnInput = document.getElementById("addColumnInput");
+        if (addColumnInput.value == "" || addColumnInput.value == " ") {
+            addColumnInput.value = "";
+            addColumnInput.placeholder = "Name your column!";
+            return;
+        }
+        columnsInfo.innerHTML += "<li>" + addColumnInput.value + "</li><br>";
+        columnValues.push(addColumnInput.value);
+        addColumnInput.value = "";
+    }
+    var removeColumnsButton = document.getElementById("removeColumnsButton");
+    removeColumnsButton.onclick = function() {
+        columnsInfo.innerHTML = "";
+    }
 }
 
 function hideAllDivs() {
     var bodyElements = document.body.getElementsByTagName("div");
-    for (var i = 0; i < bodyElements.length - 1; i++) {
+    for (var i = 0; i < bodyElements.length; i++) {
         bodyElements[i].style.display = "none";
     }
 }
@@ -79,7 +91,7 @@ function createDateOptions(selectYear, selectMonth, selectDay) {
     var februaryDays = 0;
     var i;
 
-    for (i = 1999; i < 2100; i++) {
+    for (i = 2021; i < 2023; i++) {
         selectYear.innerHTML += "<option>" + i + "</option>";
     }
 
@@ -142,9 +154,9 @@ function createDateOptions(selectYear, selectMonth, selectDay) {
 }
 
 var rowN = 0; // Global row number indicator used in createTextCells() and collectCalendarData()
+
 var createCalendarButton = document.getElementById("createCalendarButton");
 createCalendarButton.onclick = function() {
-    calendarDiv.innerHTML = ""; // Empty calendar if previous entries have been made
 
     if (fromDate > toDate) {
         window.alert("Calendar starting date must be prior to its ending date");
@@ -160,6 +172,7 @@ createCalendarButton.onclick = function() {
     var toDate = new Date(toSelectYear.value, toSelectMonth.value - 1, toSelectDay.value);
     var i;
     var calendarTable = document.createElement("table");
+    
     calendarDiv.innerHTML = "";
     calendarDiv.appendChild(calendarTable);
     
@@ -222,17 +235,18 @@ createCalendarButton.onclick = function() {
 
             for (i = 0; i < columnValues.length; i++) {
                 tdText = document.createElement("td");
-
                 textarea = document.createElement("textarea");
+                pre = document.createElement("pre");
+                button = document.createElement("button");
+
                 textarea.setAttribute("id", "tx_" + i + rowN);
                 hideElement(textarea);
 
-                pre = document.createElement("pre");
                 pre.setAttribute("id", "pr_" + i + rowN);
 
-                button = document.createElement("button");
                 button.setAttribute("id", "bt_" + i + rowN);
                 button.innerHTML = "Edit";
+
                 ((pseudoI, pseudoRowN) => {
                     button.addEventListener("click", function() {
                         textarea = document.getElementById("tx_" + pseudoI + pseudoRowN);
@@ -261,39 +275,180 @@ createCalendarButton.onclick = function() {
             rowN++;
         }
     }
+    zebraStripeCalendar();
 }
 
+var storage = window.localStorage;
+
 function saveCalendar() {
-    var colN;
+    storage.clear;
+
     var tableRows = calendarDiv.firstChild.children; // div/table/*
     var headerCells = tableRows[0]; // 1st tr/*
     var rowsInTable = calendarDiv.firstChild.childElementCount;
     var cellsInRow = tableRows[0].childElementCount;
-    var cell;
-    var dateCell;
+    var colN, cell;
     var headerRow = "";
     var dataRow = "";
-    var storage = window.localStorage;
-    storage.clear;
-
-    for (colN = 1; colN < cellsInRow; colN++) { // header tr's structure differs from that of data cells, first cell is empty
-        headerRow += " ~ " + headerCells.children[colN].innerHTML; // use tilde as separator
+    var rowId = 1;
+    
+    // header tr's structure differs from that of data cells, first cell is ignored
+    for (colN = 1; colN < cellsInRow; colN++) {
+        cell = headerCells.children[colN].innerHTML;
+        headerRow += " ~~~ " + cell; // use ~~~ as cell data separator
     }
-    storage.setItem("Headers", headerRow);
+    storage.setItem(0, headerRow + " @@@ "); // @@@ as row count indicator (used in loadCalendar() )
 
+    // collect calendar dates and notes
     for (rowN = 1; rowN < rowsInTable; rowN++) {
         for (colN = 0; colN < cellsInRow; colN++) {
-            cell = tableRows[rowN].children[colN];
-            dateCell = tableRows[rowN].children[0];
-            if (colN > 0) {  // skip date cells
-                dataRow += " ~ " + cell.getElementsByTagName("pre")[0].innerHTML; // collect calendar notes
+            cell = tableRows[rowN].children[colN]; 
+            if (colN == 0) {
+                dataRow += " ~~~ " + cell.innerHTML; // date is put directly in td
+            } else {
+                dataRow += " ~~~ " + cell.getElementsByTagName("pre")[0].innerHTML;
             }
-            storage.setItem(dateCell.innerHTML, dataRow); // date used as key
+            storage.setItem(rowId, dataRow);
         }
+        rowId++;
         dataRow = "";
     }
 }
 
+function loadCalendar() {
+    calendarDiv.innerHTML = "";
+
+    var dataString = "";
+    var dataArray = [];
+    var keys = Object.keys(storage);
+    var rowCount = keys.length - 1;
+    var columnCount;
+
+    for (var i = 0; i < keys.length; i++) {
+        dataString += storage.getItem(i);
+    }
+    
+    dataArray = dataString.split(" ~~~ ");
+
+    for (var i = 1; i < dataArray.length; i++) {
+        if (dataArray[i].includes(" @@@ ")) {
+            columnCount = i + 1;
+            dataArray[i] = dataArray[i].replace(" @@@ ", "");
+            break;
+        }
+    }
+
+    var tr, th, td, textarea, pre, button;
+    var dataIndex = 0;
+
+    var table = document.createElement("table");
+    calendarDiv.appendChild(table);
+
+    for (var rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+        tr = document.createElement("tr");
+
+        for (var columnIndex = 0; columnIndex < columnCount; columnIndex++, dataIndex++) {
+            if (rowIndex < 1) {
+                th = document.createElement("th");
+
+                if (columnIndex > 0) { // first cell is left empty
+                    th.innerHTML = dataArray[dataIndex];
+                }
+                
+                tr.appendChild(th);
+            } else {
+                td = document.createElement("td");
+
+                if (columnIndex < 1) {
+                    td.innerHTML = dataArray[dataIndex];
+                    tr.appendChild(td);
+                } else {
+                    textarea = document.createElement("textarea");
+                    pre = document.createElement("pre");
+                    button = document.createElement("button");
+
+                    textarea.setAttribute("id", "tx_" + columnIndex + rowIndex);
+                    hideElement(textarea);
+
+                    pre.setAttribute("id", "pr_" + columnIndex + rowIndex);
+                    pre.innerHTML = dataArray[dataIndex];
+
+                    button.setAttribute("id", "bt_" + columnIndex + rowIndex);
+                    button.innerHTML = "Edit";
+                    
+                    ((pseudoColI, pseudoRowI) => {
+                        button.addEventListener("click", function() {
+                            textarea = document.getElementById("tx_" + pseudoColI + pseudoRowI);
+                            pre = document.getElementById("pr_" + pseudoColI + pseudoRowI);
+                            button = document.getElementById("bt_" + pseudoColI + pseudoRowI);
+
+                            if (button.innerHTML != "Save changes") {
+                                textarea.value = pre.innerHTML;
+                                button.innerHTML = "Save changes";
+                                hideElement(pre);
+                                showElement(textarea);
+                            } else {
+                                pre.innerHTML = textarea.value;
+                                textarea.value = "";
+                                button.innerHTML = "Edit";
+                                hideElement(textarea);
+                                showElement(pre);
+                            }
+                        });
+                    })(columnIndex, rowIndex);
+
+                    tr.appendChild(td);
+                    td.append(textarea, pre, button);
+                }
+            }        
+        }
+        table.appendChild(tr);
+        columnIndex = 0;
+    }
+    zebraStripeCalendar();
+}
+
+function zebraStripeCalendar() {
+    var table = calendarDiv.firstChild;
+    var tr;
+    var firstCell = table.children[0].children[0];
+    var headerCell;
+    var dateCell;
+    var dataCell;
+    var rowCount = table.childElementCount;
+    var colCount = table.children[0].childElementCount;
+
+    for (var rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+        tr = table.children[rowIndex];
+
+        if (rowIndex == 0) {
+            for (var colIndex = 1; colIndex < colCount; colIndex++) {   
+                headerCell = tr.children[colIndex];
+                headerCell.setAttribute("style", "background-color: rgb(56, 41, 6)");
+            }
+        } else {
+            for (var colIndex = 1; colIndex < colCount; colIndex++) {
+                dataCell = tr.children[colIndex];
+                
+                if (rowIndex % 2 == 0) {
+                    dataCell.setAttribute("style", "background-color: rgb(17, 25, 51)");
+                } else {
+                    dataCell.setAttribute("style", "background-color: rgba(17, 25, 51, 0.6)");
+                }
+            }
+        }
+
+        dateCell = tr.children[0];
+
+        if (rowIndex % 2 == 0) {
+            dateCell.setAttribute("style", "background-color: rgb(56, 6, 11)");
+        } else {
+            dateCell.setAttribute("style", "background-color: rgba(56, 6, 11, 0.6)");
+        }
+    }
+
+    firstCell.setAttribute("style", "background-color: transparent");
+}
 
 
 // function saveCalendarAsFile(filename) {
@@ -324,7 +479,7 @@ function saveCalendar() {
 //                 }
 //             }
 //         }
-//         return dataArray.join(" ~~ "); // custom separator, comma is an available character in calendar notes
+//         return dataArray.join(" ~~~~~~ "); // custom separator, comma is an available character in calendar notes
 //     }
 
 //     function writeToFile(filename, data) {

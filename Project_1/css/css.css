@@ -1,8 +1,91 @@
-#calendar tr ,td, th {
-    border: 1px solid black;
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400&display=swap');
+
+* {
+    color: #c1cfff;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 3vw;
+    list-style-type: none;
+}
+
+body {
+    margin: auto;
+    background-color: #01040f;
+}
+
+button {
+    background-color: #1f2d58;
+    border-radius: 4px;
+    border: 0;
+    transition-duration: 0.15s;
+    padding: 10px;
+}
+
+button:hover {
+    background-color: #334fa3;
+    color: #ffffff;
+}
+
+input, select, textarea {
+    background-color: #1f2d58;
+    border-radius: 4px;
+    border: 0;
+    margin: 1vw;
+    padding: 10px;
+}
+
+select:hover{
+    background-color: #334fa3;
+    color: #ffffff;
+    transition-duration: 0.15s;
+}
+
+table {
+    border-spacing: 4px;
+}
+
+::placeholder {
+    color: rgb(255, 74, 74);
+}
+
+#calendar tr, td, th {
+    border-radius: 4px;
+    padding: 4px;
+}
+
+#calendarDiv button {
+    padding: 0;
+    margin: 0;
+    font-size: 80%;
+    float: left;
+}
+
+#createCalendarView {
+    margin: 20px;
 }
 
 #navigation ul li {
     display: inline;
-    list-style-type: none;
+    position: static;
+}
+
+#navigation button {
+    font-size: 6vw;
+    width: 20vw;
+    border: 0;
+    padding: 1vw;
+}
+
+#navigation {
+    background-color: black;
+    margin: 0;
+}
+
+@media only screen and (min-width: 1000px) {
+    * {
+        font-size: 2vw;
+    }
+    #navigation button {
+        font-size: 3vw;
+        width: 11vw;
+    }
 }
