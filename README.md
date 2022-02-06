@@ -7,7 +7,7 @@ This is a calendar app.
 - LOAD calendar (browser's local storage)
 - CLEAR to clear the page
 
-This Web app is made as part of a school project and is later been used in demonstration purposes. 
+This Web app is made as part of a school project and is later been used in demonstration purposes (first of the two). 
 
 The program writing has some shortcomings:
 - Documentation is basically non-existent
